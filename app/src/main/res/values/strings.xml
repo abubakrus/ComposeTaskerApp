@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ComposeTaskerApp</string>
+    <string name="app_name">Tasker</string>
     <string name="today">Today</string>
     <string name="lists">Lists</string>
     <string name="inbox">Inbox</string>
