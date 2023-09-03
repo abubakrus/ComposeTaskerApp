@@ -30,6 +30,9 @@ fun DatePickerUI(
     onDateSelectedListener: (LocalDate) -> Unit,
     height: Dp,
     textStyle: TextStyle,
+    taskYear: Int? = null,
+    taskMonth: Int? = null,
+    taskDay: Int? = null,
 ) {
 
     Column(
@@ -40,9 +43,9 @@ fun DatePickerUI(
     ) {
         Spacer(modifier = modifier.height(30.dp))
 
-        val chosenYear = remember { mutableStateOf(currentYear) }
-        val chosenMonth = remember { mutableStateOf(currentMonth) }
-        val chosenDay = remember { mutableStateOf(currentDay) }
+        val chosenYear = remember { mutableStateOf(taskYear ?: currentYear) }
+        val chosenMonth = remember { mutableStateOf(taskMonth ?: currentMonth) }
+        val chosenDay = remember { mutableStateOf(taskDay ?: currentDay) }
 
         DateSelectionSection(
             onYearChosen = { chosenYear.value = it.toInt() },

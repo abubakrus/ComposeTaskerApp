@@ -1,5 +1,6 @@
 package com.example.composetaskerapp.presentation.models
 
+import java.io.Serializable
 import java.util.UUID
 
 data class TaskUi(
@@ -10,8 +11,7 @@ data class TaskUi(
     val categoryId: String,
     val categoryColor: String,
     var isSelected: Boolean = false,
-
-) {
+) : Serializable {
     companion object {
         val preview = TaskUi(
             id = UUID.randomUUID().toString(),

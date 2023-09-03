@@ -64,7 +64,7 @@ fun TaskItem(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = LargeSpacing)
-            .clickable { task },
+            .clickable { onClick(task) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = {

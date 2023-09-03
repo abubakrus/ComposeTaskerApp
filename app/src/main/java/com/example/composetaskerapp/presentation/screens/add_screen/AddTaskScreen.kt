@@ -59,6 +59,7 @@ import com.example.composetaskerapp.common.extensions.SpacerHeight
 import com.example.composetaskerapp.common.extensions.SpacerWidth
 import com.example.composetaskerapp.common.extensions.convertToColor
 import com.example.composetaskerapp.presentation.models.ParametersHeaderType
+import com.example.composetaskerapp.presentation.models.TaskUi
 import com.example.composetaskerapp.presentation.theme.ComposeTaskerAppTheme
 import com.example.composetaskerapp.presentation.theme.ExtraLargeSpacing
 import com.example.composetaskerapp.presentation.theme.ExtraMediumSpacing
@@ -102,16 +103,17 @@ fun AddTaskScreen(
     updateSelectedTime: (String) -> Unit,
     updateTitle: (String) -> Unit,
     updateSelectedCategory: (TaskCategory) -> Unit,
+    task: TaskUi? = null,
 
     ) {
-    var text by remember { mutableStateOf(uiState.title ?: "") }
+    var text by remember { mutableStateOf(uiState.title ?: task?.title ?: "") }
     var taskParameters by remember { mutableStateOf(ParametersHeaderType.NONE) }
     val context = LocalContext.current
 
     val toastMessageId = toastFlow.collectAsState(initial = null)
 
-    LaunchedEffect(toastMessageId.value){
-        if (toastMessageId.value != null){
+    LaunchedEffect(toastMessageId.value) {
+        if (toastMessageId.value != null) {
             Toast.makeText(
                 context,
                 toastMessageId.value!!,
@@ -145,7 +147,9 @@ fun AddTaskScreen(
             },
             taskCategory = TaskCategory.preview
         )
-        AnimatedVisibility(visible = taskParameters == ParametersHeaderType.CATEGORY) {
+        AnimatedVisibility(
+            visible = taskParameters == ParametersHeaderType.CATEGORY
+        ) {
             TaskCategoryLists(
                 modifier = modifier.height(400.dp),
                 categories = uiState.tasksCategories,
@@ -155,12 +159,19 @@ fun AddTaskScreen(
             )
         }
         AnimatedVisibility(visible = taskParameters == ParametersHeaderType.DATE) {
+            val dayAndMonthAndYear = task?.data?.split(".")?.toTypedArray()
+            val day = dayAndMonthAndYear?.firstOrNull()?.trim()?.toInt()
+            val month = dayAndMonthAndYear?.get(1)?.trim()?.toInt()
+            val year = dayAndMonthAndYear?.get(2)?.trim()?.toInt()
             DatePickerUI(
                 onDateSelectedListener = {
                     updateSelectedDate("${it.dayOfMonth}.${it.monthValue}.${it.year}")
                 },
                 height = 220.dp,
-                textStyle = MaterialTheme.typography.titleLarge
+                textStyle = MaterialTheme.typography.titleLarge,
+                taskDay = day,
+                taskMonth = month,
+                taskYear = year
             )
         }
         AnimatedVisibility(visible = taskParameters == ParametersHeaderType.TIME) {

@@ -2,14 +2,12 @@ package com.example.composetaskerapp.presentation.screens.add_screen
 
 import android.annotation.SuppressLint
 import android.os.Build
-import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composetaskerapp.presentation.models.TaskUi
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationDependenciesContainer
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -21,24 +19,34 @@ import kotlinx.coroutines.flow.onEach
 @Destination(start = false)
 @Composable
 fun AddTask(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    taskUi: TaskUi? = null
 ) {
-    val viewModel:AddTaskViewModel = viewModel()
+    val viewModel: AddTaskViewModel = viewModel()
+
+    viewModel.updateUiTask(taskUi)
 
     viewModel.navigateUpFlow.filterNotNull()
         .onEach {
-        navigator.navigateUp()
-    }.launchIn(rememberCoroutineScope())
+            navigator.navigateUp()
+        }.launchIn(rememberCoroutineScope())
 
     AddTaskScreen(
         uiState = viewModel.uiState,
-        onSaveTask = viewModel::addNewTask,
+        onSaveTask = {
+            if (taskUi == null) {
+                viewModel.addNewTask()
+            } else {
+                viewModel.updateTask()
+            }
+        },
         toastFlow = viewModel.toastFlow,
         onCancelClick = navigator::navigateUp,
         updateSelectedCategory = viewModel::updateSelectedCategory,
         updateSelectedDate = viewModel::updateSelectedDate,
         updateSelectedTime = viewModel::updateSelectedTime,
-        updateTitle = viewModel::updateTitle
+        updateTitle = viewModel::updateTitle,
+        task = taskUi,
 
-    )
+        )
 }

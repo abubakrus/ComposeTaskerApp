@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composetaskerapp.R
-import com.example.composetaskerapp.domain.models.TaskCategory
 import com.example.composetaskerapp.presentation.components.FABComponent
 import com.example.composetaskerapp.presentation.components.TaskCategoryItem
 import com.example.composetaskerapp.presentation.components.TaskItem
@@ -58,7 +57,7 @@ import com.example.composetaskerapp.presentation.theme.SmallSpacing
 fun MainScreenPreview() {
     ComposeTaskerAppTheme {
         MainScreen(
-            onTaskClick = {},
+            onTaskPopupClick = {},
             uiState = MainUiState(
                 tasks = TaskUi.previews
             ),
@@ -66,7 +65,8 @@ fun MainScreenPreview() {
             onRemoveSelectedItems = {},
             onSelectedAllItems = {},
             onUnSelectedAllItems = {},
-            onTaskCategoryClick = {}
+            onTaskCategoryClick = {},
+            onTaskClick = {}
         )
     }
 }
@@ -76,7 +76,8 @@ fun MainScreenPreview() {
 fun MainScreen(
     modifier: Modifier = Modifier.background(MaterialTheme.colorScheme.background),
     uiState: MainUiState,
-    onTaskClick: () -> Unit,
+    onTaskPopupClick: () -> Unit,
+    onTaskClick: (TaskUi) -> Unit,
     onTaskCategoryClick: () -> Unit,
     onSelectItem: (TaskUi, Boolean) -> Unit,
     onRemoveSelectedItems: () -> Unit,
@@ -86,7 +87,7 @@ fun MainScreen(
     Scaffold(modifier = modifier.background(MaterialTheme.colorScheme.background),
         floatingActionButton = {
             FABComponent(
-                onTaskClick = onTaskClick,
+                onTaskClick = onTaskPopupClick,
                 onTaskCategoryClick = onTaskCategoryClick
             )
         }) { innerPaddings ->
@@ -102,11 +103,12 @@ fun MainScreen(
                     onSelectedAllItems = onSelectedAllItems
                 )
             }
-            items(items = uiState.tasks, key = { item -> item.id + item.isSelected.hashCode() })
-            { task ->
+            items(
+                items = uiState.tasks,
+                key = { item -> item.id + item.isSelected.hashCode() }) { task ->
                 TaskItem(
                     task = task,
-                    onClick = {},
+                    onClick = onTaskClick,
                     onSelected = onSelectItem,
                     isSelected = uiState.selectedTasks.contains(task)
                 )

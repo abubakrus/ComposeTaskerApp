@@ -38,3 +38,14 @@ fun Task.mapToTaskUi(): TaskUi {
         categoryColor = categoryColor
     )
 }
+
+fun TaskUi.mapToTask(): Task {
+    return Task(
+        id = id,
+        time = time,
+        data = data,
+        title = title,
+        categoryId = categoryId,
+        categoryColor = categoryColor
+    )
+}

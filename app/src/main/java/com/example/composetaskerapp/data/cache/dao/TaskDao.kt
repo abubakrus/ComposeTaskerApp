@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.composetaskerapp.data.models.TaskCache
 import kotlinx.coroutines.flow.Flow
 
@@ -21,6 +22,9 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_table WHERE category_id = :categoryId")
     fun fetchTasksSizeByCategoryId(categoryId:String):List<TaskCache>
+
+    @Update
+    fun updateTask(task: TaskCache)
 
     @Query("DELETE FROM task_table WHERE id IN (:idList)")
     fun removeTasksByIds(idList: List<String>)

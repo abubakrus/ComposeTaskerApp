@@ -45,7 +45,7 @@ class TaskRepositoryImpl() : TaskRepository {
     }
 
     override fun updateTask(task: Task) {
-        TODO("Not yet implemented")
+        dao.updateTask(task.mapToCache())
     }
 
     override fun removeTaskById(id: String) {
